@@ -75,9 +75,9 @@ export default function Header() {
           </button>
 
           {/* Avatar button with brain image */}
-          <button className="hidden md:flex items-center justify-center p-0 bg-transparent rounded-full overflow-hidden transition-transform duration-150 hover:scale-105" aria-label="User profile" id="btn-profile">
+          <Link href="/signup" className="hidden md:flex items-center justify-center p-0 bg-transparent rounded-full overflow-hidden transition-transform duration-150 hover:scale-105" aria-label="User profile" id="btn-profile">
             <img src="/avatar.png" alt="User profile avatar" className="w-10 h-10 rounded-full object-cover" />
-          </button>
+          </Link>
 
           {/* Hamburger */}
           <button
