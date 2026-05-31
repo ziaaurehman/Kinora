@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
@@ -9,13 +9,40 @@ const navLinks = [
   { label: 'About', href: '/about' },
   { label: 'Contact Us', href: '/contact' },
   { label: 'Agencies', href: '/agencies' },
-  { label: 'AI Assistant', href: '/ai-assistant' },
 ];
+
+function UserIcon(props: React.SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" {...props}>
+      <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
+    </svg>
+  );
+}
+
+function HomeIcon(props: React.SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+    </svg>
+  );
+}
+
+function LogoutIcon(props: React.SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+      <polyline points="16 17 21 12 16 7" />
+      <line x1="21" y1="12" x2="9" y2="12" />
+    </svg>
+  );
+}
 
 export default function Header() {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const profileRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -36,6 +63,16 @@ export default function Header() {
     };
   }, [isOpen]);
 
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (profileRef.current && !profileRef.current.contains(event.target as Node)) {
+        setIsProfileOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
   const closeMobile = () => setIsOpen(false);
 
   return (
@@ -48,13 +85,12 @@ export default function Header() {
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center gap-10 ml-[120px]" id="desktop-nav" aria-label="Main navigation">
           {navLinks.map((link) => {
-            const isActive = pathname === link.href;
+            const isActive = pathname === link.href || pathname.startsWith(`${link.href}/`);
             return (
               <Link
                 key={link.href}
                 href={link.href}
-                className={`relative font-sans text-base font-medium no-underline py-2 transition-colors duration-150 hover:text-accent ${isActive ? 'text-accent after:content-[""] after:absolute after:left-0 after:-bottom-1 after:w-full after:h-[2px] after:bg-accent' : 'text-txt-primary'}`}
-                id={`nav-${link.label.toLowerCase().replace(/\s+/g, '-')}`}
+                className={`relative font-sans text-base font-medium no-underline py-2 transition-colors duration-150 hover:text-accent ${isActive && link.href !== '/' ? 'text-accent after:content-[""] after:absolute after:left-0 after:-bottom-1 after:w-full after:h-[2px] after:bg-accent' : 'text-txt-primary'}`}
               >
                 {link.label}
               </Link>
@@ -62,9 +98,9 @@ export default function Header() {
           })}
         </nav>
 
-        <div className="flex items-center gap-5 ml-auto">
-          {/* Bell button with notification badge */}
-          <button className="hidden md:flex items-center justify-center w-10 h-10 rounded-full text-txt-primary bg-bg-light transition-all duration-150 hover:bg-brd-light hover:text-accent" aria-label="Notifications" id="btn-notifications">
+        <div className="flex items-center gap-5 ml-auto relative">
+          {/* Bell button */}
+          <Link href="/notifications" className="hidden md:flex items-center justify-center w-10 h-10 rounded-full text-txt-primary bg-bg-light transition-all duration-150 hover:bg-brd-light hover:text-accent" aria-label="Notifications">
             <div className="relative inline-flex items-center justify-center">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
@@ -72,19 +108,45 @@ export default function Header() {
               </svg>
               <span className="absolute -top-[2px] -right-[2px] w-[7px] h-[7px] bg-red-500 rounded-full border border-bg-light" />
             </div>
-          </button>
-
-          {/* Avatar button with brain image */}
-          <Link href="/signup" className="hidden md:flex items-center justify-center p-0 bg-transparent rounded-full overflow-hidden transition-transform duration-150 hover:scale-105" aria-label="User profile" id="btn-profile">
-            <img src="/avatar.png" alt="User profile avatar" className="w-10 h-10 rounded-full object-cover" />
           </Link>
+
+          {/* Avatar button with dropdown */}
+          <div className="relative hidden md:block" ref={profileRef}>
+            <button 
+              onClick={() => setIsProfileOpen(!isProfileOpen)}
+              className="flex items-center justify-center p-0 bg-transparent rounded-full overflow-hidden transition-transform duration-150 hover:scale-105 focus:outline-none" 
+              aria-label="User profile"
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/avatar.png" alt="User profile avatar" className="w-10 h-10 rounded-full object-cover" />
+            </button>
+            
+            {/* Dropdown Menu */}
+            {isProfileOpen && (
+              <div className="absolute right-0 mt-3 w-56 bg-white rounded-2xl shadow-xl border border-gray-100 py-3 z-[400] flex flex-col">
+                <Link href="/family/dashboard/profile" className="flex items-center gap-3 px-5 py-3 hover:bg-gray-50 text-txt-primary transition-colors text-[15px] font-medium" onClick={() => setIsProfileOpen(false)}>
+                  <UserIcon className="w-5 h-5 text-txt-primary" />
+                  My Profile
+                </Link>
+                <div className="h-[1px] bg-gray-100 w-full mx-auto max-w-[85%] my-1"></div>
+                <Link href="/family/dashboard" className="flex items-center gap-3 px-5 py-3 hover:bg-gray-50 text-txt-primary transition-colors text-[15px] font-medium" onClick={() => setIsProfileOpen(false)}>
+                  <HomeIcon className="w-5 h-5 text-txt-primary" />
+                  Dashboard
+                </Link>
+                <div className="h-[1px] bg-gray-100 w-full mx-auto max-w-[85%] my-1"></div>
+                <button className="flex items-center gap-3 px-5 py-3 hover:bg-red-50 text-[#D84C4C] transition-colors text-[15px] font-medium w-full text-left">
+                  <LogoutIcon className="w-5 h-5 text-[#D84C4C]" />
+                  Sign out
+                </button>
+              </div>
+            )}
+          </div>
 
           {/* Hamburger */}
           <button
             className="flex md:hidden flex-col justify-center gap-[5px] w-10 h-10 bg-transparent p-2 z-[401]"
             onClick={() => setIsOpen(!isOpen)}
             aria-label="Toggle menu"
-            id="btn-hamburger"
           >
             <span className={`block w-full h-[2px] bg-txt-primary rounded-sm transition-all duration-250 ${isOpen ? 'rotate-45 translate-y-[7px]' : ''}`}></span>
             <span className={`block w-full h-[2px] bg-txt-primary rounded-sm transition-all duration-250 ${isOpen ? 'opacity-0' : ''}`}></span>
@@ -103,7 +165,6 @@ export default function Header() {
       {/* Mobile Drawer */}
       <nav
         className={`md:hidden fixed top-0 w-[300px] h-full bg-white z-[401] pt-20 px-6 pb-6 transition-[right] duration-300 shadow-xl ${isOpen ? 'right-0' : '-right-[300px]'}`}
-        id="mobile-nav"
         aria-label="Mobile navigation"
       >
         <div className="flex flex-col gap-2">
@@ -120,6 +181,18 @@ export default function Header() {
               </Link>
             );
           })}
+          
+          <div className="mt-4 pt-4 border-t border-gray-100 flex flex-col gap-2">
+            <Link href="/family/dashboard/profile" className="flex items-center gap-3 px-4 py-3 hover:bg-bg-light text-txt-secondary rounded-md" onClick={closeMobile}>
+              <UserIcon className="w-5 h-5" /> My Profile
+            </Link>
+            <Link href="/family/dashboard" className="flex items-center gap-3 px-4 py-3 hover:bg-bg-light text-txt-secondary rounded-md" onClick={closeMobile}>
+              <HomeIcon className="w-5 h-5" /> Dashboard
+            </Link>
+            <button className="flex items-center gap-3 px-4 py-3 hover:bg-red-50 text-red-500 rounded-md w-full text-left" onClick={closeMobile}>
+              <LogoutIcon className="w-5 h-5" /> Sign out
+            </button>
+          </div>
         </div>
       </nav>
     </header>
