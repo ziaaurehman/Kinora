@@ -8,7 +8,12 @@ export default function OtpPage() {
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    router.push('/');
+    const accountType = typeof window !== 'undefined' ? localStorage.getItem('accountType') : null;
+    if (accountType === 'Agency') {
+      router.push('/agency/dashboard');
+    } else {
+      router.push('/family/dashboard');
+    }
   };
 
   const handleBack = () => {

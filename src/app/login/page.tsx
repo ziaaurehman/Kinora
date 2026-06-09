@@ -10,6 +10,7 @@ export default function LoginPage() {
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
+    localStorage.setItem('accountType', accountType);
     router.push('/otp');
   };
 

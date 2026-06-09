@@ -43,6 +43,16 @@ export default function Header() {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const profileRef = useRef<HTMLDivElement>(null);
+  const [accountType, setAccountType] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setAccountType(localStorage.getItem('accountType'));
+    }
+  }, []);
+
+  const dashboardLink = accountType === 'Agency' ? '/agency/dashboard' : '/family/dashboard';
+  const profileLink = accountType === 'Agency' ? '/agency/dashboard/profile' : '/family/dashboard/profile';
 
   useEffect(() => {
     const handleScroll = () => {
@@ -124,20 +134,20 @@ export default function Header() {
             {/* Dropdown Menu */}
             {isProfileOpen && (
               <div className="absolute right-0 mt-3 w-56 bg-white rounded-2xl shadow-xl border border-gray-100 py-3 z-[400] flex flex-col">
-                <Link href="/family/dashboard/profile" className="flex items-center gap-3 px-5 py-3 hover:bg-gray-50 text-txt-primary transition-colors text-[15px] font-medium" onClick={() => setIsProfileOpen(false)}>
+                <Link href={profileLink} className="flex items-center gap-3 px-5 py-3 hover:bg-gray-50 text-txt-primary transition-colors text-[15px] font-medium" onClick={() => setIsProfileOpen(false)}>
                   <UserIcon className="w-5 h-5 text-txt-primary" />
                   My Profile
                 </Link>
                 <div className="h-[1px] bg-gray-100 w-full mx-auto max-w-[85%] my-1"></div>
-                <Link href="/family/dashboard" className="flex items-center gap-3 px-5 py-3 hover:bg-gray-50 text-txt-primary transition-colors text-[15px] font-medium" onClick={() => setIsProfileOpen(false)}>
+                <Link href={dashboardLink} className="flex items-center gap-3 px-5 py-3 hover:bg-gray-50 text-txt-primary transition-colors text-[15px] font-medium" onClick={() => setIsProfileOpen(false)}>
                   <HomeIcon className="w-5 h-5 text-txt-primary" />
                   Dashboard
                 </Link>
                 <div className="h-[1px] bg-gray-100 w-full mx-auto max-w-[85%] my-1"></div>
-                <button className="flex items-center gap-3 px-5 py-3 hover:bg-red-50 text-[#D84C4C] transition-colors text-[15px] font-medium w-full text-left">
+                <Link href="/signup" className="flex items-center gap-3 px-5 py-3 hover:bg-red-50 text-[#D84C4C] transition-colors text-[15px] font-medium w-full text-left" onClick={() => setIsProfileOpen(false)}>
                   <LogoutIcon className="w-5 h-5 text-[#D84C4C]" />
                   Sign out
-                </button>
+                </Link>
               </div>
             )}
           </div>
@@ -183,15 +193,15 @@ export default function Header() {
           })}
           
           <div className="mt-4 pt-4 border-t border-gray-100 flex flex-col gap-2">
-            <Link href="/family/dashboard/profile" className="flex items-center gap-3 px-4 py-3 hover:bg-bg-light text-txt-secondary rounded-md" onClick={closeMobile}>
+            <Link href={profileLink} className="flex items-center gap-3 px-4 py-3 hover:bg-bg-light text-txt-secondary rounded-md" onClick={closeMobile}>
               <UserIcon className="w-5 h-5" /> My Profile
             </Link>
-            <Link href="/family/dashboard" className="flex items-center gap-3 px-4 py-3 hover:bg-bg-light text-txt-secondary rounded-md" onClick={closeMobile}>
+            <Link href={dashboardLink} className="flex items-center gap-3 px-4 py-3 hover:bg-bg-light text-txt-secondary rounded-md" onClick={closeMobile}>
               <HomeIcon className="w-5 h-5" /> Dashboard
             </Link>
-            <button className="flex items-center gap-3 px-4 py-3 hover:bg-red-50 text-red-500 rounded-md w-full text-left" onClick={closeMobile}>
+            <Link href="/signup" className="flex items-center gap-3 px-4 py-3 hover:bg-red-50 text-red-500 rounded-md w-full text-left" onClick={closeMobile}>
               <LogoutIcon className="w-5 h-5" /> Sign out
-            </button>
+            </Link>
           </div>
         </div>
       </nav>

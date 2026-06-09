@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import Link from 'next/link';
 
 const BadgeCheckIcon = (props: React.SVGProps<SVGSVGElement>) => (
   <svg viewBox="0 0 24 24" fill="currentColor" {...props}>
@@ -78,9 +79,9 @@ export default function AgencyProfilePage() {
                  >
                    Submit Query
                  </button>
-                 <button className="bg-white border border-primary text-primary px-6 py-2.5 rounded-md font-medium hover:bg-gray-50 transition-colors text-[14px] w-full sm:w-[140px]">
+                 <Link href="/agency/subscription" className="bg-white border border-primary text-primary px-6 py-2.5 rounded-md font-medium hover:bg-gray-50 transition-colors text-[14px] w-full sm:w-[140px] text-center block leading-[normal]">
                    Save For Later
-                 </button>
+                 </Link>
                </div>
             </div>
             
