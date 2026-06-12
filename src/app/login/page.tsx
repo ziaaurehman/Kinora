@@ -12,7 +12,7 @@ export default function LoginPage() {
     e.preventDefault();
     localStorage.setItem('accountType', accountType);
     if (accountType === 'Family') {
-      router.push('/family/dashboard');
+      router.push('/otp');
     } else {
       router.push('/agency/dashboard');
     }

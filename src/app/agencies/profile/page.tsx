@@ -74,12 +74,12 @@ export default function AgencyProfilePage() {
                {/* Action Buttons */}
                <div className="flex flex-col sm:flex-row gap-3 shrink-0">
                  <button 
-                   className="bg-primary text-white px-6 py-2.5 rounded-md font-medium hover:bg-primary-light transition-colors text-[14px] w-full sm:w-[140px]"
+                   className="bg-primary text-white px-6 py-2.5 rounded-md font-medium hover:bg-primary-light transition-colors text-[14px] w-full sm:w-auto whitespace-nowrap"
                    onClick={() => setIsSuccessModalOpen(true)}
                  >
                    Submit Query
                  </button>
-                 <Link href="/agency/subscription" className="bg-white border border-primary text-primary px-6 py-2.5 rounded-md font-medium hover:bg-gray-50 transition-colors text-[14px] w-full sm:w-[140px] text-center block leading-[normal]">
+                 <Link href="/agency/subscription" className="bg-white border border-primary text-primary px-6 py-2.5 rounded-md font-medium hover:bg-gray-50 transition-colors text-[14px] w-full sm:w-auto text-center block whitespace-nowrap">
                    Save For Later
                  </Link>
                </div>
