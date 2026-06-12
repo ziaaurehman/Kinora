@@ -13,7 +13,7 @@ export default function AIAssistantPage() {
   // We'll leave it as false for the styling prototype, but it's ready for interactivity.
 
   return (
-    <div className="flex w-full h-[calc(100vh-88px)] bg-bg-section overflow-hidden max-md:flex-col max-md:h-auto max-md:min-h-screen">
+    <div className="flex w-full h-[calc(100vh-72px)] bg-bg-section overflow-hidden">
       {/* Left Sidebar (Hidden on mobile for now, or could be a drawer) */}
       <div className="hidden lg:block h-full shrink-0">
         <SidebarLeft />

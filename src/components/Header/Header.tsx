@@ -9,6 +9,7 @@ const navLinks = [
   { label: 'About', href: '/about' },
   { label: 'Contact Us', href: '/contact' },
   { label: 'Agencies', href: '/agencies' },
+  { label: 'AI Assistant', href: '/ai-assistant' },
 ];
 
 function UserIcon(props: React.SVGProps<SVGSVGElement>) {
