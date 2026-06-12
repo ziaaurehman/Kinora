@@ -157,7 +157,7 @@ export default function AgencySetupPage() {
       {/* Success Modal Overlay */}
       {showModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-          <div className="absolute inset-0 bg-[#D3D2CE]/70 backdrop-blur-[1px]" onClick={() => router.push('/agencies')}></div>
+          <div className="absolute inset-0 bg-[#D3D2CE]/70 backdrop-blur-[1px]" onClick={() => router.push('/agency/dashboard')}></div>
           
           <div className="bg-white rounded-3xl p-10 w-full max-w-[440px] relative z-10 flex flex-col items-center text-center shadow-xl">
             <div className="w-[60px] h-[60px] rounded-2xl bg-[#E8F0EA] flex items-center justify-center mb-6">
@@ -171,7 +171,7 @@ export default function AgencySetupPage() {
             </p>
             
             <button 
-              onClick={() => router.push('/agencies')}
+              onClick={() => router.push('/agency/dashboard')}
               className="w-[280px] h-[48px] bg-[#122A38] hover:bg-[#1A3A4D] text-white rounded-xl text-[16px] font-medium transition-colors"
             >
               Done

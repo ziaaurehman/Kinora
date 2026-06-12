@@ -243,7 +243,7 @@ export default function FamilyDashboardPage() {
                 <UserIcon className="w-[26px] h-[26px] text-[#3B82F6]" />
                 <h3 className="text-[20px] font-bold text-primary">Account Info</h3>
               </div>
-              <button className="text-[#3B82F6] text-[15px] font-medium hover:underline transition-all">See Profile</button>
+              <Link href="/family/dashboard/profile" className="text-[#3B82F6] text-[15px] font-medium hover:underline transition-all">See Profile</Link>
             </div>
             
             <div className="flex flex-col gap-[1.35rem]">

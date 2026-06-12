@@ -51,8 +51,15 @@ export default function Header() {
     }
   }, []);
 
-  const dashboardLink = accountType === 'Agency' ? '/agency/dashboard' : '/family/dashboard';
-  const profileLink = accountType === 'Agency' ? '/agency/dashboard/profile' : '/family/dashboard/profile';
+  let effectiveAccountType = accountType;
+  if (pathname.startsWith('/agency')) {
+    effectiveAccountType = 'Agency';
+  } else if (pathname.startsWith('/family')) {
+    effectiveAccountType = 'Family';
+  }
+
+  const dashboardLink = effectiveAccountType === 'Agency' ? '/agency/dashboard' : '/family/dashboard';
+  const profileLink = effectiveAccountType === 'Agency' ? '/agency/dashboard/profile' : '/family/dashboard/profile';
 
   useEffect(() => {
     const handleScroll = () => {

@@ -10,10 +10,11 @@ export default function SignUpPage() {
 
   const handleCreateAccount = (e: React.FormEvent) => {
     e.preventDefault();
-    if (accountType === 'Agency') {
-      router.push('/agency/setup');
+    localStorage.setItem('accountType', accountType);
+    if (accountType === 'Family') {
+      router.push('/family/dashboard');
     } else {
-      router.push('/otp');
+      router.push('/agency/setup');
     }
   };
 

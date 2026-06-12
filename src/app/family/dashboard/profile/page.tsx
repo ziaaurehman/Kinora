@@ -98,14 +98,8 @@ export default function FamilyProfilePage() {
         <div className="flex flex-col md:flex-row md:items-start justify-between gap-6 mb-12">
           <div className="flex items-center gap-6">
             {/* Avatar */}
-            <div className="w-[100px] h-[100px] rounded-full bg-[#FFB89D] flex items-center justify-center overflow-hidden shrink-0 border-[3px] border-white shadow-sm relative">
-              <div className="absolute top-[25%] w-[60px] h-[70px] bg-[#C1583D] rounded-t-full rounded-b-md"></div>
-              <div className="absolute top-[35%] w-[40px] h-[45px] bg-[#FFE1CD] rounded-full"></div>
-              <div className="absolute bottom-[-10px] w-[70px] h-[40px] bg-[#122A38] rounded-t-full"></div>
-              <div className="absolute bottom-[20px] flex gap-2">
-                 <div className="w-1.5 h-1.5 rounded-full bg-white/30"></div>
-                 <div className="w-1.5 h-1.5 rounded-full bg-white/30"></div>
-              </div>
+            <div className="w-[100px] h-[100px] rounded-full flex items-center justify-center overflow-hidden shrink-0 border-[3px] border-white shadow-sm relative bg-gray-100">
+              <img src="/avatar.png" alt="Sarah avatar" className="w-full h-full object-cover" />
             </div>
             
             <div className="flex flex-col">
