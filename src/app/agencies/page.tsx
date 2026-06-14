@@ -121,6 +121,8 @@ const agencies = [
     services: ['Companionship', 'Errands & Shopping', 'Meal Preparation'],
     responseTime: '2 Hours',
     rating: 4.5,
+    zipCode: '675990',
+    urgencyLevels: ['Routine', 'Soon'],
   },
   {
     id: 2,
@@ -131,6 +133,8 @@ const agencies = [
     services: ['Companionship', 'Errands & Shopping', 'Meal Preparation'],
     responseTime: '2 Hours',
     rating: 4.5,
+    zipCode: '675990',
+    urgencyLevels: ['Soon', 'Urgent'],
   },
   {
     id: 3,
@@ -141,6 +145,8 @@ const agencies = [
     services: ['Companionship', 'Errands & Shopping', 'Meal Preparation'],
     responseTime: '2 Hours',
     rating: 4.5,
+    zipCode: '098768',
+    urgencyLevels: ['Urgent', 'Routine'],
   },
   {
     id: 4,
@@ -151,15 +157,61 @@ const agencies = [
     services: ['Companionship', 'Errands & Shopping', 'Meal Preparation'],
     responseTime: '2 Hours',
     rating: 4.5,
+    zipCode: '112233',
+    urgencyLevels: ['Routine', 'Soon', 'Urgent'],
   },
 ];
 
 export default function AgenciesPage() {
   const [activeTab, setActiveTab] = useState<'searched' | 'preferred'>('searched');
   
+  const [careType, setCareType] = useState('');
+  const [zipCode, setZipCode] = useState('');
+  const [urgency, setUrgency] = useState('');
+  const [filteredAgencies, setFilteredAgencies] = useState(agencies);
+
+  React.useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      const urlCareType = params.get('careType') || '';
+      const urlZip = params.get('zip') || '';
+      const urlUrgency = params.get('urgency') || '';
+      
+      setCareType(urlCareType);
+      setZipCode(urlZip);
+      setUrgency(urlUrgency);
+
+      let temp = agencies;
+      if (urlCareType) {
+        temp = temp.filter(a => a.services.some(s => s.toLowerCase().includes(urlCareType.toLowerCase())));
+      }
+      if (urlZip) {
+        temp = temp.filter(a => a.zipCode === urlZip);
+      }
+      if (urlUrgency) {
+        temp = temp.filter(a => a.urgencyLevels.includes(urlUrgency));
+      }
+      setFilteredAgencies(temp);
+    }
+  }, []);
+
+  const handleSearch = () => {
+    let temp = agencies;
+    if (careType) {
+      temp = temp.filter(a => a.services.some(s => s.toLowerCase().includes(careType.toLowerCase())));
+    }
+    if (zipCode) {
+      temp = temp.filter(a => a.zipCode === zipCode);
+    }
+    if (urgency) {
+      temp = temp.filter(a => a.urgencyLevels.includes(urgency));
+    }
+    setFilteredAgencies(temp);
+  };
+
   const displayedAgencies = activeTab === 'preferred' 
-    ? agencies.filter(a => a.id === 2 || a.id === 3) 
-    : agencies;
+    ? filteredAgencies.filter(a => a.id === 2 || a.id === 3) 
+    : filteredAgencies;
     
   return (
     <div className="bg-bg-section min-h-screen pt-10 pb-20 px-4 sm:px-6 font-sans">
@@ -170,8 +222,15 @@ export default function AgenciesPage() {
            {/* Care Type */}
            <div className="flex-1 flex items-center px-4 py-2.5 w-full md:w-auto md:border-r border-border">
              <ShieldCheckIcon className="w-5 h-5 text-txt-muted mr-3 shrink-0" />
-             <select className="bg-transparent text-txt-primary focus:outline-none w-full appearance-none text-[15px] cursor-pointer">
-                <option>Search by Care Type</option>
+             <select 
+               value={careType}
+               onChange={e => setCareType(e.target.value)}
+               className="bg-transparent text-txt-primary focus:outline-none w-full appearance-none text-[15px] cursor-pointer"
+             >
+                <option value="">Search by Care Type</option>
+                <option value="Companionship">Companionship</option>
+                <option value="Errands & Shopping">Errands & Shopping</option>
+                <option value="Meal Preparation">Meal Preparation</option>
              </select>
              <ChevronDownIcon className="w-5 h-5 text-txt-muted ml-2 shrink-0" />
            </div>
@@ -179,14 +238,27 @@ export default function AgenciesPage() {
            {/* Location */}
            <div className="flex-1 flex items-center px-4 py-2.5 w-full md:w-auto md:border-r border-border">
              <MapPinIcon className="w-5 h-5 text-txt-muted mr-3 shrink-0" />
-             <input type="text" defaultValue="675990" className="bg-transparent text-txt-primary focus:outline-none w-full text-[15px]" />
+             <input 
+               type="text" 
+               value={zipCode} 
+               onChange={e => setZipCode(e.target.value)}
+               placeholder="675990"
+               className="bg-transparent text-txt-primary focus:outline-none w-full text-[15px]" 
+             />
            </div>
            
            {/* Urgency */}
            <div className="flex-1 flex items-center px-4 py-2.5 w-full md:w-auto md:border-r border-border">
              <ClockIcon className="w-5 h-5 text-txt-muted mr-3 shrink-0" />
-             <select className="bg-transparent text-txt-primary focus:outline-none w-full appearance-none text-[15px] cursor-pointer">
-                <option>Search by Urgency Level</option>
+             <select 
+               value={urgency}
+               onChange={e => setUrgency(e.target.value)}
+               className="bg-transparent text-txt-primary focus:outline-none w-full appearance-none text-[15px] cursor-pointer"
+             >
+                <option value="">Search by Urgency Level</option>
+                <option value="Routine">Routine (within 2 weeks)</option>
+                <option value="Soon">Soon (within a week)</option>
+                <option value="Urgent">Urgent (within 48 hours)</option>
              </select>
              <ChevronDownIcon className="w-5 h-5 text-txt-muted ml-2 shrink-0" />
            </div>
@@ -196,7 +268,10 @@ export default function AgenciesPage() {
              <button className="w-[42px] h-[42px] rounded-full bg-accent text-white flex items-center justify-center shrink-0 hover:bg-accent-hover transition-colors shadow-sm" aria-label="Filter">
                <FilterIcon className="w-5 h-5" />
              </button>
-             <button className="px-8 py-2.5 bg-primary text-white rounded-lg font-medium hover:bg-primary-light transition-colors text-[15px]">
+             <button 
+               onClick={handleSearch}
+               className="px-8 py-2.5 bg-primary text-white rounded-lg font-medium hover:bg-primary-light transition-colors text-[15px]"
+             >
                Search
              </button>
            </div>
@@ -289,7 +364,7 @@ export default function AgenciesPage() {
            
            {/* Footer */}
            <div className="mt-8 pt-6 border-t border-border flex justify-between items-center text-txt-muted text-[15px] font-medium">
-             <span>135 results</span>
+             <span>{displayedAgencies.length} results</span>
              <button className="flex items-center hover:text-primary transition-colors text-primary font-medium group">
                Show me more results 
                <ArrowRightIcon className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />

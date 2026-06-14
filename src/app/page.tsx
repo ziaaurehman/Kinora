@@ -114,11 +114,11 @@ export default function Home() {
               and peace of mind. Kinora helps families connect with trusted caregivers for.
             </p>
             <div className="flex gap-4 justify-center flex-wrap">
-              <Button variant="dark" size="lg" href="/contact" id="hero-cta-query">
+              <Button variant="dark" size="lg" href="/find-care" id="hero-cta-query">
                 Find Care
               </Button>
-              <Button variant="solidWhite" size="lg" href="/agencies" id="hero-cta-agencies">
-                Explore Agencies
+              <Button variant="solidWhite" size="lg" href="/signup?role=agency" id="hero-cta-register-agency">
+                Register as Agency
               </Button>
             </div>
           </div>
@@ -276,7 +276,7 @@ export default function Home() {
                   </div>
                 </div>
               </div>
-              <Button variant="dark" className="w-full mt-auto" href="/contact">
+              <Button variant="dark" className="w-full mt-auto" href="/find-care">
                 Get Matched
               </Button>
             </div>
@@ -337,7 +337,7 @@ export default function Home() {
             heading="Need Support For Your Loved One?"
             description="We'll help you find the right match—quickly and reliably."
             primaryButtonText="Find Care"
-            primaryButtonHref="/contact"
+            primaryButtonHref="/find-care"
             primaryButtonVariant="white"
             secondaryButtonText="Explore Agencies"
             secondaryButtonHref="/agencies"

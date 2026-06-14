@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
@@ -8,13 +8,30 @@ export default function SignUpPage() {
   const router = useRouter();
   const [accountType, setAccountType] = useState<'Agency' | 'Family'>('Family');
 
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      const role = params.get('role');
+      if (role === 'agency') {
+        setAccountType('Agency');
+      }
+    }
+  }, []);
+
   const handleCreateAccount = (e: React.FormEvent) => {
     e.preventDefault();
     localStorage.setItem('accountType', accountType);
+    localStorage.setItem('isLoggedIn', 'true');
+    
     if (accountType === 'Family') {
-      router.push('/family/dashboard');
+      const isRequestFlow = localStorage.getItem('requestCareFlow') === 'true';
+      if (isRequestFlow) {
+        router.push('/otp?next=/family/profile-setup');
+      } else {
+        router.push('/otp?next=/family/profile-setup');
+      }
     } else {
-      router.push('/agency/setup');
+      router.push('/otp?next=/agency/setup');
     }
   };
 

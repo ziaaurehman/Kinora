@@ -10,7 +10,7 @@ const chats = [
   { id: 5, text: 'Lorem ipsum...', active: false },
 ];
 
-export default function SidebarLeft() {
+export default function SidebarLeft({ onResetClick }: { onResetClick?: () => void }) {
   const [openMenuId, setOpenMenuId] = useState<number | null>(null);
 
   return (
@@ -40,7 +40,10 @@ export default function SidebarLeft() {
         </div>
 
         <div className="flex flex-col gap-3">
-          <button className="flex items-center gap-3 w-full h-12 px-4 rounded-lg bg-[#E6F8ED] border border-transparent transition-colors hover:bg-[#d6f0df]">
+          <button 
+            onClick={onResetClick}
+            className="flex items-center gap-3 w-full h-12 px-4 rounded-lg bg-[#E6F8ED] border border-transparent transition-colors hover:bg-[#d6f0df]"
+          >
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" stroke="#3F6F4F" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
               <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" fill="#3F6F4F" />

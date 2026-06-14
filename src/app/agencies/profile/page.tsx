@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 const BadgeCheckIcon = (props: React.SVGProps<SVGSVGElement>) => (
   <svg viewBox="0 0 24 24" fill="currentColor" {...props}>
@@ -43,7 +44,19 @@ const DoubleCheckIcon = (props: React.SVGProps<SVGSVGElement>) => (
 );
 
 export default function AgencyProfilePage() {
+  const router = useRouter();
   const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
+  
+  const handleRequestCare = () => {
+    localStorage.setItem('selectedAgency', 'Caregiver agency');
+    const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+    if (isLoggedIn) {
+      router.push('/family/profile-setup');
+    } else {
+      localStorage.setItem('requestCareFlow', 'true');
+      router.push('/signup');
+    }
+  };
   
   return (
     <div className="bg-bg-section min-h-screen pt-10 pb-20 px-4 sm:px-6 font-sans">
@@ -73,12 +86,12 @@ export default function AgencyProfilePage() {
                
                {/* Action Buttons */}
                <div className="flex flex-col sm:flex-row gap-3 shrink-0">
-                 <button 
-                   className="bg-primary text-white px-6 py-2.5 rounded-md font-medium hover:bg-primary-light transition-colors text-[14px] w-full sm:w-auto whitespace-nowrap"
-                   onClick={() => setIsSuccessModalOpen(true)}
-                 >
-                   Submit Query
-                 </button>
+                  <button 
+                    className="bg-primary text-white px-6 py-2.5 rounded-md font-medium hover:bg-primary-light transition-colors text-[14px] w-full sm:w-auto whitespace-nowrap"
+                    onClick={handleRequestCare}
+                  >
+                    Request Care via Kinora
+                  </button>
                  <Link href="/agency/subscription" className="bg-white border border-primary text-primary px-6 py-2.5 rounded-md font-medium hover:bg-gray-50 transition-colors text-[14px] w-full sm:w-auto text-center block whitespace-nowrap">
                    Save For Later
                  </Link>
