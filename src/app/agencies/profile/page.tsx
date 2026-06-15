@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
@@ -46,6 +46,25 @@ const DoubleCheckIcon = (props: React.SVGProps<SVGSVGElement>) => (
 export default function AgencyProfilePage() {
   const router = useRouter();
   const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
+  const [offerings, setOfferings] = useState({
+    mealService: 'Yes',
+    transportation: 'Yes',
+    govPrograms: 'No',
+    otherServices: 'Dementia support, light housekeeping'
+  });
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const savedOfferings = localStorage.getItem('agency_offerings');
+      if (savedOfferings) {
+        try {
+          setOfferings(JSON.parse(savedOfferings));
+        } catch (e) {
+          console.error(e);
+        }
+      }
+    }
+  }, []);
   
   const handleRequestCare = () => {
     localStorage.setItem('selectedAgency', 'Caregiver agency');
@@ -149,16 +168,15 @@ export default function AgencyProfilePage() {
         {/* Separator */}
         <hr className="border-border my-12" />
         
-        {/* Availability Section */}
+        {/* Availability Section (Commented out) */}
+        {/* 
         <div>
            <h2 className="text-[28px] font-bold text-primary mb-6">Availability</h2>
            
            <div className="bg-white rounded-3xl shadow-sm border border-border p-6 md:p-8 overflow-x-auto">
              <div className="min-w-[850px]">
-               {/* Grid Layout */}
                <div className="grid grid-cols-6 gap-3">
                  
-                 {/* Row 1: Headers */}
                  <div className="bg-[#E6EEF5] rounded-xl flex items-center justify-center py-4">
                    <span className="font-semibold text-primary text-[17px]">July</span>
                  </div>
@@ -178,7 +196,6 @@ export default function AgencyProfilePage() {
                    <span className="font-semibold text-primary text-[17px]">Friday</span>
                  </div>
                  
-                 {/* Row 2: 1st Week */}
                  <div className="bg-[#E6EEF5] rounded-xl flex flex-col items-center justify-center py-3 h-[90px]">
                    <span className="font-semibold text-primary text-[17px]">1st Week</span>
                    <span className="text-[#6B7B88] text-[11.5px] mt-0.5">1/6/25 - 5/6/25</span>
@@ -189,7 +206,6 @@ export default function AgencyProfilePage() {
                  <AppointmentCard name="Mr. Jhon" type="Companion Care" time="1 hr" />
                  <EmptyCard />
                  
-                 {/* Row 3: 2nd Week */}
                  <div className="bg-[#E6EEF5] rounded-xl flex flex-col items-center justify-center py-3 h-[90px]">
                    <span className="font-semibold text-primary text-[17px]">2nd Week</span>
                    <span className="text-[#6B7B88] text-[11.5px] mt-0.5">8/6/25 - 12/6/25</span>
@@ -200,7 +216,6 @@ export default function AgencyProfilePage() {
                  <EmptyCard />
                  <AppointmentCard name="Ms. Ashly" type="Meal Preparation" time="40 min" />
                  
-                 {/* Row 4: 3rd Week */}
                  <div className="bg-[#E6EEF5] rounded-xl flex flex-col items-center justify-center py-3 h-[90px]">
                    <span className="font-semibold text-primary text-[17px]">3rd Week</span>
                    <span className="text-[#6B7B88] text-[11.5px] mt-0.5">15/6/25 - 19/6/25</span>
@@ -211,7 +226,6 @@ export default function AgencyProfilePage() {
                  <EmptyCard />
                  <EmptyCard />
                  
-                 {/* Row 5: 4th Week */}
                  <div className="bg-[#E6EEF5] rounded-xl flex flex-col items-center justify-center py-3 h-[90px]">
                    <span className="font-semibold text-primary text-[17px]">4th Week</span>
                    <span className="text-[#6B7B88] text-[11.5px] mt-0.5">22/6/25 - 26/6/25</span>
@@ -225,6 +239,34 @@ export default function AgencyProfilePage() {
                </div>
              </div>
            </div>
+        </div>
+        */}
+
+        {/* Services & Offerings Section */}
+        <div>
+          <h2 className="text-[28px] font-bold text-primary mb-6">Services & Offerings</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+             {/* Meal Service Card */}
+             <div className="bg-white rounded-2xl border border-border p-6 flex flex-col justify-between shadow-sm hover:shadow-md transition-shadow">
+               <span className="text-sm font-semibold text-[#8C9BA5]">Meal Service</span>
+               <span className="text-lg font-bold text-primary mt-2">{offerings.mealService}</span>
+             </div>
+             {/* Transportation Card */}
+             <div className="bg-white rounded-2xl border border-border p-6 flex flex-col justify-between shadow-sm hover:shadow-md transition-shadow">
+               <span className="text-sm font-semibold text-[#8C9BA5]">Transportation</span>
+               <span className="text-lg font-bold text-primary mt-2">{offerings.transportation}</span>
+             </div>
+             {/* Gov Programs Card */}
+             <div className="bg-white rounded-2xl border border-border p-6 flex flex-col justify-between shadow-sm hover:shadow-md transition-shadow">
+               <span className="text-sm font-semibold text-[#8C9BA5]">Government Programs Accepted</span>
+               <span className="text-lg font-bold text-primary mt-2">{offerings.govPrograms}</span>
+             </div>
+             {/* Other Services Card */}
+             <div className="bg-white rounded-2xl border border-border p-6 flex flex-col justify-between shadow-sm hover:shadow-md transition-shadow">
+               <span className="text-sm font-semibold text-[#8C9BA5]">Other Services</span>
+               <p className="text-[15px] font-medium text-primary mt-2 leading-snug break-words">{offerings.otherServices || 'None Specified'}</p>
+             </div>
+          </div>
         </div>
         
       </div>

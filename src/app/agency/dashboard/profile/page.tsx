@@ -43,14 +43,49 @@ export default function AgencyProfilePage() {
     about: 'We are a dedicated team of professionals providing top-notch companionship and care services to families in need.'
   });
 
+  const [offerings, setOfferings] = useState({
+    mealService: 'Yes',
+    transportation: 'Yes',
+    govPrograms: 'No',
+    otherServices: 'Dementia support, light housekeeping'
+  });
+
   const [careTypes, setCareTypes] = useState(['Companion Care']);
   const [languages, setLanguages] = useState(['English']);
   const [careTypesOpen, setCareTypesOpen] = useState(false);
   const [languagesOpen, setLanguagesOpen] = useState(false);
   
+  // Hydrate offerings
+  React.useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const savedOfferings = localStorage.getItem('agency_offerings');
+      if (savedOfferings) {
+        try {
+          setOfferings(JSON.parse(savedOfferings));
+        } catch (e) {
+          console.error(e);
+        }
+      }
+    }
+  }, []);
+
   // Handlers
-  const handleSave = () => setIsEditing(false);
-  const handleCancel = () => setIsEditing(false);
+  const handleSave = () => {
+    localStorage.setItem('agency_offerings', JSON.stringify(offerings));
+    setIsEditing(false);
+  };
+
+  const handleCancel = () => {
+    const savedOfferings = localStorage.getItem('agency_offerings');
+    if (savedOfferings) {
+      try {
+        setOfferings(JSON.parse(savedOfferings));
+      } catch (e) {
+        console.error(e);
+      }
+    }
+    setIsEditing(false);
+  };
 
   const toggleCareType = (type: string) => {
     if (!isEditing) return;
@@ -281,7 +316,8 @@ export default function AgencyProfilePage() {
         </div>
       </div>
 
-      {/* Select Your Availability Grid */}
+      {/* Select Your Availability Grid (Commented out) */}
+      {/* 
       <div className="w-full">
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-[22px] font-bold text-[#112330]">Select Your Availability</h2>
@@ -294,7 +330,6 @@ export default function AgencyProfilePage() {
 
         <div className="bg-white rounded-3xl p-6 md:p-8 border border-[#E2E8F0] shadow-sm overflow-x-auto">
           <div className="min-w-[800px]">
-            {/* Headers */}
             <div className="grid grid-cols-6 gap-3 mb-3">
               <div className="h-[46px] bg-[#D96C3B] text-white rounded-xl flex items-center justify-center font-bold text-[15px]">July</div>
               <div className="h-[46px] bg-[#E8F0F8] text-[#112330] rounded-xl flex items-center justify-center font-bold text-[15px]">Monday</div>
@@ -304,7 +339,6 @@ export default function AgencyProfilePage() {
               <div className="h-[46px] bg-[#E8F0F8] text-[#112330] rounded-xl flex items-center justify-center font-bold text-[15px]">Friday</div>
             </div>
 
-            {/* Grid Body */}
             {[
               { label: '1st Week', dates: '1/6/25 - 5/6/25', data: ['Mr. Jhon', null, null, 'Mr. Jhon', null] },
               { label: '2nd Week', dates: '8/6/25 - 12/6/25', data: [null, 'Ms. Ashly', null, null, 'Ms. Ashly'] },
@@ -312,13 +346,11 @@ export default function AgencyProfilePage() {
               { label: '4th Week', dates: '22/6/25 - 26/6/25', data: [null, null, null, 'Mr. William', null] }
             ].map((row, rIdx) => (
               <div key={row.label} className="grid grid-cols-6 gap-3 mb-3 last:mb-0">
-                {/* Row Header */}
                 <div className="h-[76px] bg-[#E8F0F8] text-[#112330] rounded-xl flex flex-col items-center justify-center font-bold text-[15px]">
                   {row.label}
                   <span className="text-[11px] font-medium text-gray-500 mt-0.5">{row.dates}</span>
                 </div>
                 
-                {/* Cells */}
                 {row.data.map((cell, cIdx) => (
                   <div key={`${rIdx}-${cIdx}`} className="h-[76px]">
                     {cell ? (
@@ -345,7 +377,6 @@ export default function AgencyProfilePage() {
         </div>
       </div>
 
-      {/* Add User Modal */}
       {showAddUserModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           <div className="absolute inset-0 bg-[#112330]/40 backdrop-blur-[2px]" onClick={() => setShowAddUserModal(false)}></div>
@@ -379,6 +410,107 @@ export default function AgencyProfilePage() {
           </div>
         </div>
       )}
+      */}
+
+      {/* Agency Offerings Section */}
+      <div className="w-full mt-12 bg-white rounded-3xl p-6 md:p-8 border border-[#E2E8F0] shadow-sm">
+        <h2 className="text-[22px] font-bold text-[#112330] mb-6">Agency Offerings</h2>
+        
+        {isEditing ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Meal Service */}
+            <div className="flex flex-col gap-1.5">
+              <label className="text-sm font-semibold text-[#112330]">Meal Service</label>
+              <div className="relative">
+                <select 
+                  value={offerings.mealService} 
+                  onChange={e => setOfferings({...offerings, mealService: e.target.value})}
+                  className="w-full h-[46px] px-4 pr-10 rounded-lg border border-[#E2E8F0] bg-white text-[#112330] focus:outline-none focus:border-blue-400 text-[14px] appearance-none cursor-pointer"
+                >
+                  <option value="Yes">Yes</option>
+                  <option value="No">No</option>
+                </select>
+                <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-gray-500">
+                  <ChevronDownIcon className="w-4 h-4" />
+                </div>
+              </div>
+            </div>
+
+            {/* Transportation */}
+            <div className="flex flex-col gap-1.5">
+              <label className="text-sm font-semibold text-[#112330]">Transportation</label>
+              <div className="relative">
+                <select 
+                  value={offerings.transportation} 
+                  onChange={e => setOfferings({...offerings, transportation: e.target.value})}
+                  className="w-full h-[46px] px-4 pr-10 rounded-lg border border-[#E2E8F0] bg-white text-[#112330] focus:outline-none focus:border-blue-400 text-[14px] appearance-none cursor-pointer"
+                >
+                  <option value="Yes">Yes</option>
+                  <option value="No">No</option>
+                </select>
+                <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-gray-500">
+                  <ChevronDownIcon className="w-4 h-4" />
+                </div>
+              </div>
+            </div>
+
+            {/* Government Programs Accepted */}
+            <div className="flex flex-col gap-1.5">
+              <label className="text-sm font-semibold text-[#112330]">Government Programs Accepted</label>
+              <div className="relative">
+                <select 
+                  value={offerings.govPrograms} 
+                  onChange={e => setOfferings({...offerings, govPrograms: e.target.value})}
+                  className="w-full h-[46px] px-4 pr-10 rounded-lg border border-[#E2E8F0] bg-white text-[#112330] focus:outline-none focus:border-blue-400 text-[14px] appearance-none cursor-pointer"
+                >
+                  <option value="Yes">Yes</option>
+                  <option value="No">No</option>
+                </select>
+                <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-gray-500">
+                  <ChevronDownIcon className="w-4 h-4" />
+                </div>
+              </div>
+            </div>
+
+            {/* Other Services */}
+            <div className="flex flex-col gap-1.5">
+              <label className="text-sm font-semibold text-[#112330]">Other Services</label>
+              <input 
+                type="text" 
+                value={offerings.otherServices}
+                onChange={e => setOfferings({...offerings, otherServices: e.target.value})}
+                placeholder="e.g. Dementia care, companion walking"
+                className="w-full h-[46px] px-4 rounded-lg border border-[#E2E8F0] bg-white text-[#112330] focus:outline-none focus:border-blue-400 text-[14px]"
+              />
+            </div>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {/* Meal Service Card */}
+            <div className="bg-[#FAF9F6] rounded-2xl border border-[#E2E8F0] p-6 flex flex-col justify-between shadow-sm animate-in fade-in duration-200">
+              <span className="text-sm font-semibold text-gray-500">Meal Service</span>
+              <span className="text-lg font-bold text-[#112330] mt-2">{offerings.mealService}</span>
+            </div>
+            {/* Transportation Card */}
+            <div className="bg-[#FAF9F6] rounded-2xl border border-[#E2E8F0] p-6 flex flex-col justify-between shadow-sm animate-in fade-in duration-200">
+              <span className="text-sm font-semibold text-gray-500">Transportation</span>
+              <span className="text-lg font-bold text-[#112330] mt-2">{offerings.transportation}</span>
+            </div>
+            {/* Gov Programs Card */}
+            <div className="bg-[#FAF9F6] rounded-2xl border border-[#E2E8F0] p-6 flex flex-col justify-between shadow-sm animate-in fade-in duration-200">
+              <span className="text-sm font-semibold text-gray-500">Gov Programs Accepted</span>
+              <span className="text-lg font-bold text-[#112330] mt-2">{offerings.govPrograms}</span>
+            </div>
+            {/* Other Services Card */}
+            <div className="bg-[#FAF9F6] rounded-2xl border border-[#E2E8F0] p-6 flex flex-col justify-between shadow-sm animate-in fade-in duration-200">
+              <span className="text-sm font-semibold text-gray-500">Other Services</span>
+              <span className="text-[15px] font-bold text-[#112330] mt-2 truncate" title={offerings.otherServices || 'None'}>
+                {offerings.otherServices || 'None Specified'}
+              </span>
+            </div>
+          </div>
+        )}
+      </div>
 
     </div>
   );
