@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 // --- MOCK DATA ---
 const stats = [
@@ -66,11 +67,17 @@ const Pagination = () => (
   </div>
 );
 
-const CardHeader = ({ title, showSeeAll = false, dropdown = false }: { title: string, showSeeAll?: boolean, dropdown?: boolean }) => (
+const CardHeader = ({ title, showSeeAll = false, dropdown = false, seeAllLink }: { title: string, showSeeAll?: boolean, dropdown?: boolean, seeAllLink?: string }) => (
   <>
     <div className="flex items-center justify-between mb-4">
       <h2 className="text-[16px] font-bold text-[#112330]">{title}</h2>
-      {showSeeAll && <button className="text-[13px] font-bold text-[#D96C3B] hover:underline">See All</button>}
+      {showSeeAll && (
+        seeAllLink ? (
+          <Link href={seeAllLink} className="text-[13px] font-bold text-[#D96C3B] hover:underline">See All</Link>
+        ) : (
+          <button className="text-[13px] font-bold text-[#D96C3B] hover:underline">See All</button>
+        )
+      )}
       {dropdown && (
         <select className="text-[12px] border border-[#E2E8F0] rounded-md px-2 py-1 outline-none cursor-pointer">
           <option>This year</option>
@@ -84,6 +91,7 @@ const CardHeader = ({ title, showSeeAll = false, dropdown = false }: { title: st
 );
 
 export default function AdminDashboardPage() {
+  const router = useRouter();
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
 
   const toggleDropdown = (id: string) => {
@@ -151,7 +159,7 @@ export default function AdminDashboardPage() {
           <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
             
             <div className="lg:col-span-3 bg-white rounded-2xl p-6 shadow-sm border border-[#E2E8F0] flex flex-col">
-              <CardHeader title="Applications List" showSeeAll />
+              <CardHeader title="Applications List" showSeeAll seeAllLink="/k_admin/applications" />
               <div className="overflow-x-auto">
                 <table className="w-full text-left border-collapse text-[12px]">
                   <thead>
@@ -250,7 +258,7 @@ export default function AdminDashboardPage() {
             </div>
 
             <div className="lg:col-span-2 bg-white rounded-2xl p-6 shadow-sm border border-[#E2E8F0] flex flex-col">
-              <CardHeader title="Activities List" showSeeAll />
+              <CardHeader title="Activities List" showSeeAll seeAllLink="/k_admin/activities" />
               <div className="overflow-x-auto flex-1">
                 <table className="w-full text-left border-collapse text-[12px]">
                   <thead>
@@ -278,7 +286,7 @@ export default function AdminDashboardPage() {
           <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
             
             <div className="lg:col-span-3 bg-white rounded-2xl p-6 shadow-sm border border-[#E2E8F0] flex flex-col">
-              <CardHeader title="Incoming Inquiries" showSeeAll />
+              <CardHeader title="Incoming Inquiries" showSeeAll seeAllLink="/k_admin/inquiries" />
               <div className="overflow-x-auto">
                 <table className="w-full text-left border-collapse text-[12px]">
                   <thead>
@@ -303,7 +311,12 @@ export default function AdminDashboardPage() {
                           </button>
                           {openDropdown === `inq-${inq.id}` && (
                             <div className="absolute right-0 top-10 w-24 bg-white border border-[#E2E8F0] rounded-lg shadow-md z-10 py-1">
-                              <button className="w-full text-left px-3 py-1.5 text-[11px] font-semibold text-[#112330] hover:bg-gray-50">Assign</button>
+                              <button 
+                                onClick={() => router.push(`/k_admin/inquiries/assign?id=${inq.id}`)}
+                                className="w-full text-left px-3 py-1.5 text-[11px] font-semibold text-[#112330] hover:bg-gray-50"
+                              >
+                                Assign
+                              </button>
                             </div>
                           )}
                         </td>
@@ -380,7 +393,7 @@ export default function AdminDashboardPage() {
             </div>
 
             <div className="lg:col-span-2 flex flex-col gap-6">
-               <div className="bg-white rounded-2xl p-6 shadow-sm border border-[#E2E8F0] flex gap-4 cursor-pointer hover:shadow-md transition-shadow">
+               <Link href="/k_admin/applications" className="bg-white rounded-2xl p-6 shadow-sm border border-[#E2E8F0] flex gap-4 hover:shadow-md transition-shadow no-underline text-inherit">
                  <div className="w-14 h-14 rounded-xl bg-[#FEE2E2] text-[#D96C3B] flex items-center justify-center shrink-0">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="4" y="2" width="16" height="20" rx="2" ry="2"/><path d="M9 22v-4h6v4"/><path d="M8 6h.01"/><path d="M16 6h.01"/><path d="M12 6h.01"/><path d="M12 10h.01"/><path d="M12 14h.01"/><path d="M16 10h.01"/><path d="M16 14h.01"/><path d="M8 10h.01"/><path d="M8 14h.01"/></svg>
                  </div>
@@ -391,7 +404,7 @@ export default function AdminDashboardPage() {
                    </div>
                    <p className="text-[12px] text-gray-500 leading-snug">Manage every agency account with precision view, flag, suspend, or restore as needed.</p>
                  </div>
-               </div>
+               </Link>
                
                <div className="bg-white rounded-2xl p-6 shadow-sm border border-[#E2E8F0] flex gap-4 cursor-pointer hover:shadow-md transition-shadow">
                  <div className="w-14 h-14 rounded-xl bg-[#DBEAFE] text-[#3B82F6] flex items-center justify-center shrink-0">
